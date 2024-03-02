@@ -5,12 +5,14 @@ import { useNavigate } from 'react-router-dom';
 
 const AdvancedSearchPage: React.FC = () => {
   const [advancedQuery, setAdvancedQuery] = useState<string>('');
-  const navigate = useNavigate();  // Utilisation du hook useNavigate pour la navigation
+  const navigate = useNavigate();
 
-  const handleAdvancedSearch = async () => {
+  const handleAdvancedSearch = async (page: number = 1, limit: number = 10) => {
     try {
-      // Effectuer une recherche avancée avec l'API Open Library
-      const response = await axios.get(`https://openlibrary.org/search.json?q=${advancedQuery}&mode=advanced`);
+      // Effectuer une recherche avancée avec l'API Open Library en utilisant les paramètres de pagination
+      const response = await axios.get(
+        `https://openlibrary.org/search.json?q=${advancedQuery}&mode=advanced&page=${page}&limit=${limit}&fields=title,author_name,subject,key,cover_i`,
+      );
 
       // Naviguer vers une page de résultats avec les données de la recherche avancée
       navigate('/search-results', { state: { results: response.data.docs } });
@@ -28,7 +30,7 @@ const AdvancedSearchPage: React.FC = () => {
         value={advancedQuery}
         onChange={(e: ChangeEvent<HTMLInputElement>) => setAdvancedQuery(e.target.value)}
       />
-      <button onClick={handleAdvancedSearch}>Rechercher</button>
+      <button onClick={() => handleAdvancedSearch()}>Rechercher</button>
       {/* Autres éléments de la page de recherche avancée */}
     </div>
   );
