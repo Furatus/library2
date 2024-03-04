@@ -1,16 +1,15 @@
-// HomePage.tsx
 import React from 'react';
-import AdvancedSearcgPage from './AdvancedSearchPage';
 
 const HomePage: React.FC = () => {
-  return (
-    <div>
-      <h1>Bienvenue sur la Bibliothèque de la Ville</h1>
-      <p>Ce site vous permet de rechercher des livres dans notre bibliothèque.</p>
-      <AdvancedSearcgPage />
-      {}
-    </div>
-  );
+    const imageUrl = "https://st2.depositphotos.com/2769299/7314/i/450/depositphotos_73146775-stock-photo-a-stack-of-books-on.jpg"
+    return (
+        <div className="container mt-5 text-center">
+            <h1>Bienvenue sur notre bibliothèque en ligne !</h1>
+            <img src={imageUrl}/>
+        </div>
+    );
 };
 
 export default HomePage;
+
+

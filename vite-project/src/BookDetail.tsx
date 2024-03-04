@@ -21,6 +21,7 @@ function BookDetail() {
     const [authorDetails, setAuthorDetails] = useState<AuthorDetails[]>([]);
 
     useEffect(() => {
+        document.title = 'Détails du Livre';
         const fetchBookDetails = async () => {
             try {
                 const response = await axios.get(`https://openlibrary.org/isbn/${isbn}.json`);

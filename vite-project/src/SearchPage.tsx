@@ -1,68 +1,73 @@
 // SearchPage.tsx
 
+
 import React, { useState, useEffect } from 'react';
-import { Link } from 'react-router-dom';
-import axios from 'axios';
+import axios, { AxiosResponse } from 'axios';
 import SearchBar from './SearchBar';
-import  Book  from './book'; // Importe l'interface Book
+import Book from "./book.ts";
+
+interface OpenLibraryBook {
+    title: string;
+    author_name?: string[];
+    cover_i?: number;
+    first_publish_year?: number;
+    edition_count?: number;
+    isbn?: string[];
+}
 
 const SearchPage: React.FC = () => {
-    const [books, setBooks] = useState<Book[]>([]);
-    const [filteredBooks, setFilteredBooks] = useState<Book[]>([]);
+    const [searchQuery, setSearchQuery] = useState<string>('');
+    const [booksList, setBooksList] = useState<Book[]>([]);
 
-    useEffect(() => {
-        // Fetch la liste de livres avec l'endpoint de recherche
-        axios.get('https://openlibrary.org/search.json?q=the+lord+of+the+rings')
-            .then((response) => {
-                const booksData = response.data.docs;
-                const booksList: Book[] = booksData.map((book: any) => ({
-                    title: book.title,
-                    author: book.author_name ? book.author_name[0] : 'Unknown Author',
-                    coverUrl: book.cover_i ? `http://covers.openlibrary.org/b/id/${book.cover_i}-L.jpg` : '',
-                    firstPublishYear: book.first_publish_year || 0,
-                    editionCount: book.edition_count || 0,
-                    isbn: book.isbn || [],
-                }));
-                setBooks(booksList);
-                setFilteredBooks(booksList);
-            })
-            .catch((error) => {
-                console.error('Error fetching book list:', error);
-            });
-    }, []);
-
-    const handleSearch = (query: string) => {
-        const lowerCaseQuery = query.toLowerCase();
-        const filtered = books.filter((book) => book.title.toLowerCase().includes(lowerCaseQuery));
-        setFilteredBooks(filtered);
+    const handleBookClick = (isbn: string) => {
+        // Rediriger vers la page de détails avec l'ISBN
+        window.location.href = `/book/detail?isbn=${isbn}`;
     };
 
-    return (
-        <div>
-            {/* Barre de recherche */}
-            <div className="sticky-top">
-                <SearchBar onSearch={handleSearch} />
-            </div>
+    const handleSearch = async (query: string) => {
+        try {
+            const response: AxiosResponse = await axios.get(`https://openlibrary.org/search.json?q=${query}`);
+            const booksData: OpenLibraryBook[] = response.data.docs;
 
-            {/* Liste des livres en grilles */}
-            <div className="container mt-4">
-                <div className="row">
-                    {filteredBooks.map((book) => (
-                        <div className="col-md-4 mb-4" key={book.isbn[0]}>
-                            <Link to={`/book/detail?isbn=${book.isbn[0]}`} style={{ textDecoration: 'none', color: 'inherit' }}>
-                                <div className="card">
-                                    <img src={book.coverUrl} alt={book.title} className="card-img-top" />
-                                    <div className="card-body">
-                                        <h5 className="card-title">{book.title}</h5>
-                                        <p className="card-text">{`Author: ${book.author}`}</p>
-                                        <p className="card-text">{`Year: ${book.firstPublishYear}`}</p>
-                                        <p className="card-text">{`Editions: ${book.editionCount}`}</p>
-                                    </div>
-                                </div>
-                            </Link>
+            const mappedBooks: Book[] = booksData.map((book: OpenLibraryBook) => ({
+                title: book.title,
+                author: book.author_name ? book.author_name[0] : 'Unknown Author',
+                coverUrl: book.cover_i ? `http://covers.openlibrary.org/b/id/${book.cover_i}-L.jpg` : '',
+                firstPublishYear: book.first_publish_year || 0,
+                editionCount: book.edition_count || 0,
+                isbn: book.isbn || [],
+            }));
+            setBooksList(mappedBooks);
+        } catch (error) {
+            console.error('Error fetching search results:', error);
+        }
+    };
+
+    useEffect(() => {
+    document.title = 'Page de recherche';
+        if (searchQuery) {
+            handleSearch(searchQuery);
+        }
+    }, [searchQuery]);
+
+    return (
+        <div className="container mt-4">
+            <h1 className="mb-4">Rechercher un livre</h1>
+            <SearchBar onSearch={setSearchQuery} />
+            <div className="row">
+                {booksList.map((book, index) => (
+                    <div key={index} className="col-lg-3 col-md-4 col-sm-6 mb-4" onClick={() => handleBookClick(book.isbn[0])} style={{ cursor: 'pointer' }}>
+                        <div className="card">
+                            <img src={book.coverUrl} className="card-img-top" alt={book.title} />
+                            <div className="card-body">
+                                <h5 className="card-title">{book.title}</h5>
+                                <p className="card-text">{book.author}</p>
+                                <p className="card-text">Date de Parution: {book.firstPublishYear}</p>
+                                <p className="card-text">Editions: {book.editionCount}</p>
+                            </div>
                         </div>
-                    ))}
-                </div>
+                    </div>
+                ))}
             </div>
         </div>
     );

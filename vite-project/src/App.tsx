@@ -14,7 +14,7 @@ function App() {
                 <Route path="/book/detail" element={<BookDetail />} />
                 <Route path="/search" element={<SearchPage />} />
                 <Route path="/AdvancedSearchPage" element={<AdvancedSearchPage />} />
-                <Route path="/HomePage" element={<HomePage />} />
+                <Route path="/" element={<HomePage />} />
             </Routes>
         </Router>
     );
