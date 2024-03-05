@@ -40,10 +40,10 @@ function BookDetail() {
                             const authorResponse = await axios.get(`https://openlibrary.org${authorKey}.json`);
                             const authorDetails = authorResponse.data;
 
-                            // Ajoute les détails de l'auteur au tableau
+                            
                             authorsDetailsArray.push({
                                 name: authorDetails.name,
-                                // Ajoute d'autres propriétés si nécessaire
+                                
                             });
                         } catch (authorError) {
                             console.error('Error fetching author details:', authorError);
