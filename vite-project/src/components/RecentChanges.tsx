@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react';
-import Change from "./Change.ts";
+import Change from "../interfaces/Change.ts";
 
 
 

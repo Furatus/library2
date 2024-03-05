@@ -70,17 +70,27 @@ function BookDetail() {
         <div className="container mt-4">
             <div className="row">
                 <div className="col-md-4">
-                    <img src={`http://covers.openlibrary.org/b/isbn/${isbn}-L.jpg`} alt="Book Cover" className="img-fluid" />
+                    <img src={`http://covers.openlibrary.org/b/isbn/${isbn}-L.jpg`} alt="Book Cover"
+                         className="img-fluid"/>
                 </div>
                 <div className="col-md-8">
                     <h2>{bookDetails.title}</h2>
-                    <p>Publish Year: {bookDetails.publish_date || 'Unknown'}</p>
+                    <p>Date de parution: {bookDetails.publish_date || 'Unknown'}</p>
 
                     {authorDetails.map((author, index) => (
                         <div key={index}>
-                            <p>Author : {author.name}</p>
+                            <p>Auteur : {author.name}</p>
                         </div>
                     ))}
+                </div>
+                <div className="mt-3">
+                    <a
+                        href={`https://fr.wikipedia.org/w/index.php?search=${encodeURIComponent(bookDetails.title)}`}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                    >
+                        Recherche Wikipedia pour "{bookDetails.title}"
+                    </a>
                 </div>
             </div>
         </div>
