@@ -78,7 +78,7 @@ function BookDetail() {
 
                     {authorDetails.map((author, index) => (
                         <div key={index}>
-                            <p>Author {index + 1}: {author.name}</p>
+                            <p>Author : {author.name}</p>
                         </div>
                     ))}
                 </div>

@@ -26,7 +26,7 @@ const SearchPage: React.FC = () => {
 
     const handleSearch = async (query: string) => {
         try {
-            const response: AxiosResponse = await axios.get(`https://openlibrary.org/search.json?q=${query}`);
+            const response: AxiosResponse = await axios.get(`https://openlibrary.org/search.json?q=${query}&fields=title,author_name,cover_i,first_publish_year,edition_count,isbn`);
             const booksData: OpenLibraryBook[] = response.data.docs;
 
             const mappedBooks: Book[] = booksData.map((book: OpenLibraryBook) => ({
